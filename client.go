@@ -44,7 +44,10 @@ func GetCorona(country string) CurrentCoronaStatus{
 		if jsonErr != nil {
 			log.Fatal(jsonErr)
 		}
-		ccs.CaseFatalityRate,ccs.CaseRecoveryRate=caseRate(&ccs.Confirmed,&ccs.Recovered,&ccs.Deaths)
+		err=caseRate(&ccs)
+		if err!=nil{
+			log.Fatal(err)
+		}
 		return ccs
 	} else {
 		ccs.Confirmed.Value=-1

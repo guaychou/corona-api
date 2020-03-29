@@ -1,7 +1,18 @@
 package corona_golang_api
 
-func caseRate(confirmed *Confirmed, recovered *Recovered, deaths *Deaths) (float64,float64) {
-	return fatalityRate(confirmed,deaths),recoveryRate(confirmed,recovered)
+import (
+	"errors"
+)
+
+func caseRate(c *CurrentCoronaStatus) error {
+	c.CaseFatalityRate=fatalityRate(&c.Confirmed , &c.Deaths)
+	c.CaseRecoveryRate=recoveryRate(&c.Confirmed , &c.Recovered)
+	if c.CaseRecoveryRate<0 {
+		return errors.New("Recovery rate is less than zero")
+	}else if c.CaseFatalityRate<0{
+		return errors.New("Fatalitiy rate less than zero")
+	}
+	return nil
 }
 
 func fatalityRate(confirmed *Confirmed, deaths *Deaths) float64 {
