@@ -23,6 +23,8 @@ type CurrentCoronaStatus struct {
 	Confirmed `json:"confirmed"`
 	Recovered `json:"recovered"`
     Deaths `json:"deaths"`
+	CaseFatalityRate float64
+	CaseRecoveryRate float64
 }
 
 func GetCorona(country string) CurrentCoronaStatus{
@@ -42,10 +44,8 @@ func GetCorona(country string) CurrentCoronaStatus{
 		if jsonErr != nil {
 			log.Fatal(jsonErr)
 		}
-			if jsonErr != nil {
-				log.Fatal(jsonErr)
-			}
-			return ccs
+		ccs.CaseFatalityRate,ccs.CaseRecoveryRate=caseRate(&ccs.Confirmed,&ccs.Recovered,&ccs.Deaths)
+		return ccs
 	} else {
 		ccs.Confirmed.Value=-1
 		ccs.Deaths.Value=-1
